@@ -1,14 +1,16 @@
-vim.cmd("cd C:/Users/maury/Onedrive/Documents")
-
-
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
-
 -- LEADER KEYS (must be first)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+vim.cmd("cd C:/Users/maury/Onedrive/Documents")
+
+vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<CR>")
+vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<CR>")
+vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<CR>")
+vim.keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<CR>")
+
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 -- TRUE COLOR SUPPORT
 vim.opt.termguicolors = true
 
@@ -39,7 +41,7 @@ vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>")
 vim.g.netrw_bufsettings = "noma nomod nu rnu nobl nowrap ro"
 
 -- TERMINAL SPLIT
-vim.keymap.set("n", "<leader>t", ":botright 12split | terminal<CR>")
+--vim.keymap.set("n", "<leader>t", ":botright 12split | terminal<CR>")
 
 -- DELETE WORD WITH ALT+BACKSPACE
 vim.keymap.set("i", "<M-BS>", "<C-w>", { noremap = true })
@@ -51,7 +53,11 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 require("options")
 require("keymaps")
 require("telescope").setup({})
-
+require("lazy").setup({
+	{
+		"ThePrimeagen/vim-be-good"
+	}
+})
 
 require("tokyonight").setup({
   style = "storm",
@@ -72,24 +78,49 @@ require("nvim-tree").setup({
   view = {
     side = "right",
     width = 30,
-    relativenumber = true
+    relativenumber = true,
   },
-   update_focused_file = {
-   enable = true,
-   update_root = true
+
+  update_focused_file = {
+    enable = true,
+    update_root = true,
   },
+
   renderer = {
     icons = {
       show = {
         file = true,
-        folder = true
-      }
-    }
+        folder = true,
+      },
+    },
   },
+
   filters = {
-    dotfiles = false
-  }
+    dotfiles = false,
+  },
+
+  on_attach = function(bufnr)
+    local api = require("nvim-tree.api")
+
+require("lazy").setup("plugins")
+
+    local function opts(desc)
+      return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+    end
+
+    -- default mappings
+    api.config.mappings.default_on_attach(bufnr)
+
+    -- override open action
+    vim.keymap.set("n", "l", function()
+      api.node.open.edit()
+      vim.cmd("normal! zz")
+    end, opts("Open and center"))
+  end,
 })
+
+vim.opt.scrolloff = 12
+
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
 vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
@@ -101,3 +132,24 @@ vim.api.nvim_set_hl(0, "NvimTreeNormalNC", { bg = "none" })
 vim.api.nvim_set_hl(0, "NvimTreeEndOfBuffer", { bg = "none" })
 vim.api.nvim_set_hl(0, "NvimTreeWinSeparator", { bg = "none" })
 vim.api.nvim_set_hl(0, "NvimTreeVertSplit", { bg = "none" })
+
+
+
+vim.api.nvim_set_hl(0, "NvimTreeFolderName", { fg = "#4c5b7a" })
+vim.api.nvim_set_hl(0, "NvimTreeOpenedFolderName", { fg = "#4c5b7a" })
+vim.api.nvim_set_hl(0, "NvimTreeIndentMarker", { fg = "#3a4560" })
+vim.api.nvim_set_hl(0, "LineNr", { fg = "#3a4560" })
+vim.api.nvim_set_hl(0, "NvimTreeFileName", { fg = "#5c6f95" })
+
+
+
+-- RUN FILES
+vim.keymap.set("n", "<leader>rh", ":w<CR>:!start %<CR>", { desc = "Run HTML" })
+vim.keymap.set("n", "<leader>rj", ":w<CR>:!node %<CR>", { desc = "Run JavaScript" })
+vim.keymap.set("n", "<leader>rp", ":w<CR>:botright 12split | terminal python %<CR>")
+
+
+
+vim.keymap.set("n", "<leader>cj", "I//<Esc>", { desc = "Comment JS line" })
+vim.keymap.set("n", "<leader>ch", "I<!-- <Esc>A --><Esc>", { desc = "Comment HTML line" })
+vim.keymap.set("n", "<leader>cp", "I#<Esc>", { desc = "Comment Python line" })

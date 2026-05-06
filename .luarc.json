@@ -1,0 +1,14 @@
+{
+    "diagnostics.globals": [
+        "vim",
+        "nul_ls",
+        "shiftwidth",
+        "softtabstop",
+        "tabstop"
+    ],
+    "diagnostics.disable": [
+        "redundant-value",
+        "undefined-global",
+        "undefined-field"
+    ]
+}

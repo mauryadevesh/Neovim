@@ -160,7 +160,6 @@ This config is set up for many ecosystems (via Mason/LSP + formatters), includin
 - Lua, JS/TS, HTML/CSS, Astro, Tailwind/emmet
 - Go, Rust, C/C++, Python
 - SQL, YAML, JSON, Markdown, LaTeX
-- Nim, Haskell, Zig, WGSL, PHP, C#, and others
 
 Exact server/formatter lists are in:
 
@@ -192,36 +191,6 @@ lua/
 colors/
 assets/
 ```
-
----
-
-## Screenshots
-
-If present in `assets/`, you can embed:
-
-```md
-![Screenshot 1](assets/ss1.png)
-![Screenshot 2](assets/ss2.png)
-![Screenshot 3](assets/ss3.png)
-![Screenshot 4](assets/ss4.png)
-```
-
----
-
-## Troubleshooting (Windows)
-
-1. **`rg` not found**  
-   Install ripgrep and ensure it is in PATH.
-
-2. **Markdown preview not building**  
-   Install Node.js + Yarn, then rebuild plugin.
-
-3. **FZF native build fails**  
-   Install Visual Studio Build Tools (or make toolchain), then rebuild.
-
-4. **Image rendering issues**  
-   Ensure `luarocks` and ImageMagick-related dependencies are available.
-
 ---
 
 ## License

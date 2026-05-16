@@ -33,9 +33,12 @@ return {
 
       vim.lsp.config("ts_ls", {
         capabilities = capabilities,
+<<<<<<< HEAD
         on_attach = function(client)
           client.server_capabilities.documentFormattingProvider = false
         end,
+=======
+>>>>>>> fcaaf87955ef9c6a5422b9d4c4ec1d046e1a7f73
       })
 
       vim.lsp.enable({ "lua_ls", "pyright", "ts_ls" })

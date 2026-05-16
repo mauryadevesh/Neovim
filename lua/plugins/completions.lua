@@ -30,9 +30,14 @@ return {
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-e>"] = cmp.mapping.abort(),
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
+<<<<<<< HEAD
           ["<C-j>"] = cmp.mapping.confirm({ select = true }),
           ["<C-n>"] = cmp.mapping.select_next_item(),
           ["<C-p>"] = cmp.mapping.select_prev_item(),
+=======
+          ["<C-j>"] = cmp.mapping.select_next_item(),
+          ["<C-k>"] = cmp.mapping.select_prev_item(),
+>>>>>>> fcaaf87955ef9c6a5422b9d4c4ec1d046e1a7f73
         }),
         sources = cmp.config.sources({
           { name = "nvim_lsp" },

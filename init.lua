@@ -1,6 +1,7 @@
 -- LEADER KEYS
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+<<<<<<< HEAD
 vim.fn.chdir("C:/Users/maury/Documents")
 require("keymaps")
 
@@ -12,6 +13,10 @@ vim.diagnostic.config({
 })
 vim.keymap.set("n", "gl", vim.diagnostic.open_float)
 
+=======
+require("keymaps")
+
+>>>>>>> fcaaf87955ef9c6a5422b9d4c4ec1d046e1a7f73
 vim.cmd("set expandtab")
 vim.cmd("set tabstop=3")
 vim.cmd("set softtabstop=3")
@@ -32,16 +37,21 @@ vim.keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<CR>")
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+<<<<<<< HEAD
 -- UI 
 vim.opt.wrap = false
 vim.opt.sidescroll = 8
 vim.opt.sidescrolloff = 15
+=======
+-- UI
+>>>>>>> fcaaf87955ef9c6a5422b9d4c4ec1d046e1a7f73
 vim.opt.termguicolors = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.scrolloff = 12
+<<<<<<< HEAD
 vim.opt.cmdheight = 1
 vim.opt.showcmd = true
 vim.opt.showcmdloc = "last"
@@ -55,6 +65,8 @@ vim.api.nvim_create_autocmd({ "VimLeavePre", "VimLeave" }, {
   end,
 })
 
+=======
+>>>>>>> fcaaf87955ef9c6a5422b9d4c4ec1d046e1a7f73
 vim.api.nvim_set_hl(0, "NvimTreeLineNr", {
   fg = "#5eacd3",
   bold = true
@@ -72,6 +84,7 @@ vim.opt.fillchars = { eob = " ", vert = " " }
 -- LAZY
 vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim")
 require("lazy").setup("plugins")  -- ONLY ONE CALL
+<<<<<<< HEAD
 vim.api.nvim_create_autocmd("User", {
   pattern = "VeryLazy",
   callback = function()
@@ -115,6 +128,21 @@ vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { noremap = true, silent =
 vim.keymap.set("n", "<leader>bD", "<cmd>bdelete!<CR>", { noremap = true, silent = true, desc = "Force delete current buffer" })
 vim.keymap.set("n", "<S-l>", "<cmd>BufferLineCycleNext<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<S-h>", "<cmd>BufferLineCyclePrev<CR>", { noremap = true, silent = true })
+=======
+
+-- KEYMAPS
+vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>")
+vim.keymap.set("n", "<A-w><A-w>", "<C-w>w", { noremap = true, silent = true })
+vim.keymap.set("i", "<M-BS>", "<C-w>", { noremap = true })
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+
+-- AUTO CD INTO FILE DIR
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    vim.cmd("silent! lcd %:p:h")
+  end,
+})
+>>>>>>> fcaaf87955ef9c6a5422b9d4c4ec1d046e1a7f73
 
 -- COLORS
 vim.cmd.colorscheme("tokyonight")

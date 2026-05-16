@@ -3,6 +3,7 @@ return {
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
+<<<<<<< HEAD
       local api = require("nvim-tree.api")
 
       local function on_attach(bufnr)
@@ -31,6 +32,9 @@ return {
 
       require("nvim-tree").setup({
         on_attach = on_attach,
+=======
+      require("nvim-tree").setup({
+>>>>>>> fcaaf87955ef9c6a5422b9d4c4ec1d046e1a7f73
         view = {
           side = "right",
           width = 45,

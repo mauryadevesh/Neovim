@@ -1,2 +1,11 @@
-vim.keymap.set("n", "<leader>r", ":botright 12split | term python %<CR>")
-vim.keymap.set("n", "<leader>t", ":botright 12split | terminal<CR>")
+vim.keymap.set("n", "<leader>t", function()
+    local file_dir = vim.fn.expand("%:p:h")
+
+    vim.cmd("botright 12split")
+
+    vim.cmd("lcd " .. file_dir)
+
+    vim.cmd("terminal")
+
+    vim.cmd("startinsert")
+end)

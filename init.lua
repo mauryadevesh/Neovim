@@ -1,155 +1,144 @@
--- LEADER KEYS (must be first)
+-- LEADER KEYS
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+vim.fn.chdir("C:/Users/maury/Documents")
+require("keymaps")
 
-vim.cmd("cd C:/Users/maury/Onedrive/Documents")
+vim.o.shell = "wsl.exe"
+vim.diagnostic.config({
+    virtual_text = false,
+    underline = true,
+    signs = true,
+})
+vim.keymap.set("n", "gl", vim.diagnostic.open_float)
 
+vim.cmd("set expandtab")
+vim.cmd("set tabstop=3")
+vim.cmd("set softtabstop=3")
+vim.cmd("set shiftwidth=3")
+vim.diagnostic.config({
+  virtual_text = {
+    spacing = 4,
+    prefix = "●",
+  },
+})
+-- TELESCOPE KEYMAPS
 vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<CR>")
 vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<CR>")
 vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<CR>")
 vim.keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<CR>")
 
+-- DISABLE NETRW (required for nvim-tree)
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
--- TRUE COLOR SUPPORT
+
+-- UI 
+vim.opt.wrap = false
+vim.opt.sidescroll = 8
+vim.opt.sidescrolloff = 15
 vim.opt.termguicolors = true
-
--- LAZY.NVIM RUNTIME PATH
-vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim")
-
--- LOAD PLUGINS
-require("lazy").setup("plugins")
-
--- BASIC OPTIONS
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
+vim.opt.scrolloff = 12
+vim.opt.cmdheight = 1
+vim.opt.showcmd = true
+vim.opt.showcmdloc = "last"
+vim.opt.laststatus = 2
+vim.opt.guicursor = "n-v-c:block-blinkwait300-blinkon200-blinkoff200,i-ci-ve:ver25-blinkwait300-blinkon200-blinkoff200,r-cr:ver25-blinkwait300-blinkon200-blinkoff200"
 
--- TRANSPARENT BACKGROUND
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
-vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
-vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
-vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
-
--- space + e for exiting a file 
-vim.keymap.set("n", "<leader>e", ":NvimTreeToggle<CR>")
-
-
--- getting relative number in teh nvim
-vim.g.netrw_bufsettings = "noma nomod nu rnu nobl nowrap ro"
-
--- TERMINAL SPLIT
---vim.keymap.set("n", "<leader>t", ":botright 12split | terminal<CR>")
-
--- DELETE WORD WITH ALT+BACKSPACE
-vim.keymap.set("i", "<M-BS>", "<C-w>", { noremap = true })
-
--- CLEAR SEARCH HIGHLIGHT
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-
--- LOAD YOUR MODULES
-require("options")
-require("keymaps")
-require("telescope").setup({})
-require("lazy").setup({
-	{
-		"ThePrimeagen/vim-be-good"
-	}
-})
-
-require("tokyonight").setup({
-  style = "storm",
-  transparent = true
-})
-
-vim.api.nvim_create_autocmd("BufEnter", {
+vim.api.nvim_create_autocmd({ "VimLeavePre", "VimLeave" }, {
   callback = function()
-    vim.cmd("silent! lcd %:p:h")
-  end
-})
-
-
--- COLORSCHEME
-vim.cmd.colorscheme("tokyonight")
-
-require("nvim-tree").setup({
-  view = {
-    side = "right",
-    width = 30,
-    relativenumber = true,
-  },
-
-  update_focused_file = {
-    enable = true,
-    update_root = true,
-  },
-
-  renderer = {
-    icons = {
-      show = {
-        file = true,
-        folder = true,
-      },
-    },
-  },
-
-  filters = {
-    dotfiles = false,
-  },
-
-  on_attach = function(bufnr)
-    local api = require("nvim-tree.api")
-
-require("lazy").setup("plugins")
-
-    local function opts(desc)
-      return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-    end
-
-    -- default mappings
-    api.config.mappings.default_on_attach(bufnr)
-
-    -- override open action
-    vim.keymap.set("n", "l", function()
-      api.node.open.edit()
-      vim.cmd("normal! zz")
-    end, opts("Open and center"))
+    io.write("\27[0 q")
+    io.flush()
   end,
 })
 
-vim.opt.scrolloff = 12
+vim.api.nvim_set_hl(0, "NvimTreeLineNr", {
+  fg = "#5eacd3",
+  bold = true
+})
 
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
-vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
-vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
-vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
-
-vim.api.nvim_set_hl(0, "NvimTreeNormal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NvimTreeNormalNC", { bg = "none" })
-vim.api.nvim_set_hl(0, "NvimTreeEndOfBuffer", { bg = "none" })
-vim.api.nvim_set_hl(0, "NvimTreeWinSeparator", { bg = "none" })
-vim.api.nvim_set_hl(0, "NvimTreeVertSplit", { bg = "none" })
+vim.api.nvim_set_hl(0, "NvimTreeCursorLine", {
+  bg = "#2a2d3a"
+})
 
 
 
-vim.api.nvim_set_hl(0, "NvimTreeFolderName", { fg = "#4c5b7a" })
-vim.api.nvim_set_hl(0, "NvimTreeOpenedFolderName", { fg = "#4c5b7a" })
-vim.api.nvim_set_hl(0, "NvimTreeIndentMarker", { fg = "#3a4560" })
-vim.api.nvim_set_hl(0, "LineNr", { fg = "#3a4560" })
-vim.api.nvim_set_hl(0, "NvimTreeFileName", { fg = "#5c6f95" })
+-- CLEAN BACKGROUND
+vim.opt.fillchars = { eob = " ", vert = " " }
 
+-- LAZY
+vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim")
+require("lazy").setup("plugins")  -- ONLY ONE CALL
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  callback = function()
+    vim.opt.cmdheight = 1
+    vim.opt.showcmd = true
+    vim.opt.showcmdloc = "last"
+    vim.opt.laststatus = 2
+  end,
+})
 
+-- KEYMAPS
+vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>")
+vim.keymap.set("n", "<A-w><A-w>", "<C-w>w", { noremap = true, silent = true })
+vim.keymap.set("i", "<M-BS>", "<C-w>", { noremap = true })
+local function close_floating_window()
+  local current_win = vim.api.nvim_get_current_win()
+  local current_cfg = vim.api.nvim_win_get_config(current_win)
+  if current_cfg.relative ~= "" then
+    vim.api.nvim_win_close(current_win, true)
+    return true
+  end
+
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local cfg = vim.api.nvim_win_get_config(win)
+    if cfg.relative ~= "" then
+      vim.api.nvim_win_close(win, true)
+      return true
+    end
+  end
+
+  return false
+end
+
+vim.keymap.set("n", "<Esc><Esc>", function()
+  if close_floating_window() then
+    return
+  end
+  vim.cmd("nohlsearch")
+end, { noremap = true, silent = true, desc = "Close popup or clear search highlight" })
+vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { noremap = true, silent = true, desc = "Delete current buffer" })
+vim.keymap.set("n", "<leader>bD", "<cmd>bdelete!<CR>", { noremap = true, silent = true, desc = "Force delete current buffer" })
+vim.keymap.set("n", "<S-l>", "<cmd>BufferLineCycleNext<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<S-h>", "<cmd>BufferLineCyclePrev<CR>", { noremap = true, silent = true })
+
+-- COLORS
+vim.cmd.colorscheme("tokyonight")
+vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#7aa2f7", bg = "#1e1e2e" })
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e1e2e" })
+vim.api.nvim_set_hl(0, "CmpBorder", { fg = "#7aa2f7", bg = "#1e1e2e" })
+
+-- TRANSPARENCY
+local transparent_groups = {
+  "Normal", "NormalNC", "EndOfBuffer", "LineNr", "SignColumn",
+  "NvimTreeNormal", "NvimTreeNormalNC", "NvimTreeEndOfBuffer",
+}
+
+for _, group in ipairs(transparent_groups) do
+  vim.api.nvim_set_hl(0, group, { bg = "none" })
+end
 
 -- RUN FILES
-vim.keymap.set("n", "<leader>rh", ":w<CR>:!start %<CR>", { desc = "Run HTML" })
-vim.keymap.set("n", "<leader>rj", ":w<CR>:!node %<CR>", { desc = "Run JavaScript" })
-vim.keymap.set("n", "<leader>rp", ":w<CR>:botright 12split | terminal python %<CR>")
+vim.keymap.set("n", "<leader>rh", ":w<CR>:!start %<CR>")
+vim.keymap.set("n", "<leader>rjn", ":w<CR>:!node %<CR>")
+vim.keymap.set("n", "<leader>rpy", ":w<CR>:!python %<CR>")
+vim.keymap.set("n", "<leader>rjj", ":w<CR>:!javac % && java %:r <CR>")
 
-
-
-vim.keymap.set("n", "<leader>cj", "I//<Esc>", { desc = "Comment JS line" })
-vim.keymap.set("n", "<leader>ch", "I<!-- <Esc>A --><Esc>", { desc = "Comment HTML line" })
-vim.keymap.set("n", "<leader>cp", "I#<Esc>", { desc = "Comment Python line" })
+-- COMMENT SHORTCUTS
+vim.keymap.set("n", "<leader>cj", "I//<Esc>")
+vim.keymap.set("n", "<leader>ch", "I<!-- <Esc>A --><Esc>")
+vim.keymap.set("n", "<leader>cp", "I#<Esc>")

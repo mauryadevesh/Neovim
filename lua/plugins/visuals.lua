@@ -3,6 +3,7 @@ return {
     "rcarriga/nvim-notify",
     opts = {
       timeout = 2500,
+      top_down = false,
       max_height = function()
         return math.floor(vim.o.lines * 0.75)
       end,
@@ -55,6 +56,12 @@ return {
         separator_style = "thin",
         show_buffer_close_icons = false,
         show_close_icon = false,
+        name_formatter = function(buf)
+          if buf.id and vim.bo[buf.id].filetype == "alpha" then
+            return "Home"
+          end
+          return buf.name
+        end,
         offsets = {
           {
             filetype = "NvimTree",
@@ -111,5 +118,29 @@ return {
       respect_scrolloff = true,
       cursor_scrolls_alone = true,
     },
+  },
+  {
+    "sphamba/smear-cursor.nvim",
+    cond = vim.g.neovide == nil,
+    opts = {
+      stiffness = 0.8,
+      trailing_stiffness = 0.5,
+      trailing_exponent = 2,
+      hide_target_hack = false,
+    },
+    config = function(_, opts)
+      require("smear_cursor").setup(opts)
+      -- Disable smear cursor entirely when typing to eliminate lag/stutter
+      vim.api.nvim_create_autocmd("InsertEnter", {
+        callback = function()
+          require("smear_cursor").enabled = false
+        end,
+      })
+      vim.api.nvim_create_autocmd("InsertLeave", {
+        callback = function()
+          require("smear_cursor").enabled = true
+        end,
+      })
+    end,
   },
 }

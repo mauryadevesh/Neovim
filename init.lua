@@ -96,6 +96,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 vim.api.nvim_create_autocmd("BufEnter", {
   callback = function()
+    if vim.bo.buftype == "terminal" then return end
     vim.cmd("silent! lcd %:p:h")
   end,
 })
@@ -140,7 +141,32 @@ end, { desc = "Open the home dashboard" })
 local map = vim.keymap.set
 
 map("n", "mm", "<cmd>w<CR>", { silent = true })
-map("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { silent = true })
+map("n", "<leader>e", function()
+  if vim.bo.buftype == "terminal" then
+    local cwd_file = vim.fn.expand("~/.nvim_term_cwd")
+    local term_dir = nil
+    if vim.fn.filereadable(cwd_file) == 1 then
+      local lines = vim.fn.readfile(cwd_file)
+      if #lines > 0 and lines[1] ~= "" then
+        term_dir = vim.fn.trim(lines[1])
+      end
+    end
+    if term_dir and term_dir:match("^/") then
+      local wsl_result = vim.fn.systemlist("wsl.exe wslpath -w " .. vim.fn.shellescape(term_dir))
+      if vim.v.shell_error == 0 and #wsl_result > 0 then
+        term_dir = vim.fn.trim(wsl_result[1])
+      end
+    end
+    if not term_dir or term_dir == "" then
+      term_dir = vim.fn.getcwd(0)
+    end
+    local tree_api = require("nvim-tree.api")
+    tree_api.tree.open()
+    tree_api.tree.change_root(term_dir)
+  else
+    vim.cmd("NvimTreeToggle")
+  end
+end, { silent = true, desc = "Toggle explorer (sync to terminal cwd)" })
 map("n", "<A-w><A-w>", "<C-w>w", { noremap = true, silent = true })
 map("i", "<M-BS>", "<C-w>", { noremap = true })
 map("n", "gl", vim.diagnostic.open_float)

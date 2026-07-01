@@ -11,12 +11,22 @@ return {
             { name = "PowerShell", cmd = "powershell.exe" },
          }
 
+         local options = {
+            { name = "WSL",        cmd = "wsl.exe" },
+            { name = "PowerShell", cmd = "powershell.exe" },
+            { name = "LazyGit",    is_lazygit = true },
+         }
+
          local default_shell = shells[1]
 
-         local function open_term_in_tab(shell)
+         local function open_term_in_tab(shell, cwd)
             local prev_shell = vim.o.shell
             vim.o.shell = shell.cmd
-            vim.cmd("tabnew | terminal")
+            vim.cmd("tabnew")
+            if cwd then
+               vim.cmd("lcd " .. vim.fn.fnameescape(cwd))
+            end
+            vim.cmd("terminal")
             vim.cmd("startinsert")
             vim.api.nvim_buf_set_var(0, "term_shell", shell.name)
             vim.o.shell = prev_shell
@@ -63,11 +73,48 @@ return {
             end)
          end
 
-         vim.keymap.set("n", "<leader>tn", function()
-            pick_shell(function(shell)
-               open_term_in_tab(shell)
+         local function pick_option(dir)
+            local labels = {}
+            for _, o in ipairs(options) do
+               table.insert(labels, o.name)
+            end
+            vim.ui.select(labels, { prompt = "Open terminal / tool:" }, function(choice)
+               if not choice then
+                  return
+               end
+               for _, o in ipairs(options) do
+                  if o.name == choice then
+                     if o.is_lazygit then
+                        vim.cmd("tabnew | terminal lazygit")
+                        vim.cmd("startinsert")
+                        vim.api.nvim_buf_set_var(0, "term_shell", "lazygit")
+                     else
+                        open_term_in_tab(o, dir)
+                     end
+                     return
+                  end
+               end
             end)
-         end, { desc = "New terminal tab (select shell)" })
+         end
+
+         local function get_nvimtree_dir()
+            local ok, api = pcall(require, "nvim-tree.api")
+            if not ok then return nil end
+            if vim.bo.filetype ~= "NvimTree" then return nil end
+            local node = api.tree.get_node_under_cursor()
+            if not node then return nil end
+            if node.type == "directory" then
+               return node.absolute_path
+            elseif node.parent and node.parent.absolute_path then
+               return node.parent.absolute_path
+            end
+            return nil
+         end
+
+         vim.keymap.set("n", "<leader>tn", function()
+            local dir = get_nvimtree_dir()
+            pick_option(dir)
+         end, { desc = "New terminal tab (select shell / LazyGit)" })
 
          vim.keymap.set("n", "<leader>tw", function()
             open_term_in_tab(shells[1])
@@ -113,6 +160,9 @@ return {
                vim.notify("Default terminal shell set to: " .. shell.name, vim.log.levels.INFO)
             end)
          end, { desc = "Set default terminal shell" })
+
+         _G._terminal_pick_shell = pick_shell
+         _G._terminal_open_in_tab = open_term_in_tab
 
       end,
    },

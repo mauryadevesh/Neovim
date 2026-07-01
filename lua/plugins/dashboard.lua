@@ -37,6 +37,7 @@ return {
     dashboard.section.top_buttons.val = {
       dashboard.button("e", "  New file", "<cmd>ene <BAR> startinsert <CR>"),
       dashboard.button("r", "  Recent files", "<cmd>Telescope oldfiles<CR>"),
+      dashboard.button("o", "  Open terminal", "<cmd>lua _G._terminal_pick_shell(function(s) _G._terminal_open_in_tab(s) end)<CR>"),
       dashboard.button("d", "󰙯  Toggle Discord RPC", "<cmd>CordToggle<CR>"),
       dashboard.button("q", "  Quit", "<cmd>qa<CR>"),
     }

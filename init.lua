@@ -101,6 +101,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
+
 vim.api.nvim_create_autocmd({ "VimLeavePre", "VimLeave" }, {
   callback = function()
     io.write("\27[0 q")

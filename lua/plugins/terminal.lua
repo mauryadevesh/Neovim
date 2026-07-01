@@ -124,6 +124,12 @@ return {
             open_term_in_tab(shells[2])
          end, { desc = "New terminal tab (PowerShell)" })
 
+         vim.keymap.set("n", "<leader>tg", function()
+            vim.cmd("tabnew | terminal lazygit")
+            vim.cmd("startinsert")
+            vim.api.nvim_buf_set_var(0, "term_shell", "lazygit")
+         end, { desc = "LazyGit in tab" })
+
          vim.keymap.set("n", "<leader>t", function()
             pick_shell(function(shell)
                open_term_split("j", shell)
@@ -163,6 +169,7 @@ return {
 
          _G._terminal_pick_shell = pick_shell
          _G._terminal_open_in_tab = open_term_in_tab
+          _G._terminal_shells = shells
 
       end,
    },
